@@ -123,7 +123,6 @@ const USERNAME_KEY = "username";
 function onLoginSubmit(event) {
   // 기본동작(새로고침 등)이 실행되는 것을 막아준다.
   event.preventDefault();
-  console.log(savedUsername);
   loginForm.classList.add(HIDDEN_CLASSNAME);
   const username = loginInput.value;
   localStorage.setItem(USERNAME_KEY, username);
