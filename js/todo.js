@@ -1,11 +1,11 @@
-const toDoForm = document.getitemById("todo-form");
+const toDoForm = document.getElementById("todo-form");
 // const toDoInput = document.querySelector("#todo-form input");
 const toDoInput = toDoForm.querySelector("input");
-const toDoList = document.getitemById("todo-list");
+const toDoList = document.getElementById("todo-list");
 
 const TODOS_KEY = "todos";
 
-const toDos = [];
+let toDos = [];
 
 function saveToDos() {
   // JSON.stringify => String array를 단순한 String으로 바꿔서
@@ -14,17 +14,20 @@ function saveToDos() {
 }
 
 function deleteToDo(event) {
-  const li = event.target.parentitem;
+  // 버튼만 지우고 싶을 때 아래와 같이
+  // const li = event.target;
+  const li = event.target.parentElement;
   li.remove();
 }
 
 function paintToDo(newToDo) {
   // 리스트 요소생성
-  const li = document.createitem("li");
+  const li = document.createElement("li");
+  li.id = newToDo.id;
   // 스팬 요소생성
-  const span = document.createitem("span");
-  span.innerText = newToDo;
-  const button = document.createitem("button");
+  const span = document.createElement("span");
+  span.innerText = newToDo.text;
+  const button = document.createElement("button");
   button.innerText = "❌";
   button.addEventListener("click", deleteToDo);
   // 순서대로 스팬먼저 붙히고, 그다음 버튼 붙히고
@@ -37,8 +40,12 @@ function handleToDosubmit(event) {
   event.preventDefault();
   const newToDo = toDoInput.value;
   toDoInput.value = "";
-  toDos.push(newToDo);
-  paintToDo(newToDo);
+  const newToDoObj = {
+    text: newToDo,
+    id: Date.now(),
+  };
+  toDos.push(newToDoObj);
+  paintToDo(newToDoObj);
   saveToDos();
 }
 
@@ -49,6 +56,6 @@ const savedToDos = localStorage.getItem(TODOS_KEY);
 if (savedToDos !== null) {
   // JSON.parse String을 array로
   const parsedToDos = JSON.parse(savedToDos);
-
-  parsedToDos.forEach((item) => console.log("this is the turn of " + item));
+  toDos = parsedToDos;
+  parsedToDos.forEach(paintToDo);
 }
